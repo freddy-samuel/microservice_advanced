@@ -1,0 +1,38 @@
+Step1
+
+Controller
+http://localhost:7076/currencies/paging/v1.0?pageNo=1&sortKey=code
+	
+	@GetMapping({"/paging/v1.0", "/paging/v1.1"})
+	public List<Currency> getAllCurrenciesByPageandSort(@RequestParam(value="pageNo", defaultValue="0") Integer pageNo,
+		      @RequestParam(value="sortKey", defaultValue="code") String sortKey)
+	{
+		return this.currencyService.getAllCurrencies(pageNo, sortKey);
+	}
+  
+  
+  
+  Step 2
+  
+  Service
+  
+  import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+  
+   //paging and Sorting
+    public List<Currency> getAllCurrencies(Integer pageNo, String sortKey)
+	{
+		// Setting no. of records in each page, page no., sort field
+		int noOfRecords = 2;
+		Pageable page = PageRequest.of(pageNo, noOfRecords, Sort.by(sortKey));
+		Page<Currency> pagedResult = currencyRepository.findAll(page);
+		// changing to List
+		return pagedResult.getContent();
+	}
+    
+  
+  
+  
+  
